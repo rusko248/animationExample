@@ -171,7 +171,7 @@ void drawWalls(float width, float height, float length)
 void drawRoom()
 {
     drawGround(roomWidth,roomHeight,roomLength);
-    drawRoof(roomWidth,roomHeight,roomLength);
+    //drawRoof(roomWidth,roomHeight,roomLength);
     drawWalls(roomWidth,roomHeight,roomLength);
 }
 
