@@ -42,6 +42,9 @@ int jumpTimer;
 int numControlPoints;
 CatmullRom* cr;
 
+//animation
+bool upKeyPressed, downKeyPressed, rightKeyPressed, leftKeyPressed;
+
 //OpenGL display-related
 int windowWidth  = 640;
 int windowHeight = 640;
@@ -385,17 +388,53 @@ void jump()
     }
 }
 
+
+/*** Functions to turn objects right/left, and move up/down ***/
+void turnRight()
+{
+    worldAngle += 5;
+}
+
+void turnLeft()
+{
+    worldAngle -= 5;
+}
+
+void moveForward()
+{
+    worldPos.x += 1*sin(PI/180*worldAngle);
+    worldPos.z -= 1*cos(PI/180*worldAngle);
+}
+
+void moveBack()
+{
+    worldPos.x -= 1*sin(PI/180*worldAngle);
+    worldPos.z += 1*cos(PI/180*worldAngle);
+}
+
+
 /**
- * Timer function
+ * Timer function for moving forward/back, and turning
  */
 static void Timer(int value)
 {
-    if (jumpOn) jump();
-    
+    if (upKeyPressed) moveForward();
+    if (downKeyPressed) moveBack();
+    if (rightKeyPressed) turnRight();
+    if (leftKeyPressed) turnLeft();
     glutPostRedisplay();
-    glutTimerFunc(10, Timer, 0); // 10 milliseconds
-}
+    glutTimerFunc(100, Timer, 0); // 10 milliseconds
+ }
 
+/**
+ * Timer function for jumping, it moves faster
+ */
+static void TimerJump(int value){
+    if (jumpOn) jump();
+    glutPostRedisplay();
+    glutTimerFunc(10, TimerJump, 0); // 10 milliseconds
+
+}
 
 /**
  * Keyboard callback function
@@ -427,25 +466,42 @@ void KeyboardCallback(unsigned char key, int x, int y)
 }
 
 
-/**special cases for up/down/left/right arrows**/
+/**
+ * special cases for up/down/left/right arrows
+ **/
 void KeySpecial(int key, int x, int y)
 {
     if (key == GLUT_KEY_RIGHT) { //turns to the right
-        worldAngle += 5;
+        rightKeyPressed = true;
     } else if (key == GLUT_KEY_LEFT) {  //turns to the left
-        worldAngle -= 5;
+        leftKeyPressed = true;
     } else if (key == GLUT_KEY_UP){  //moves a step forward
-        worldPos.x += 1*sin(PI/180*worldAngle);
-        worldPos.z -= 1*cos(PI/180*worldAngle);
+        upKeyPressed = true;
     } else if (key == GLUT_KEY_DOWN){ //moves a step back
-        worldPos.x -= 1*sin(PI/180*worldAngle);
-        worldPos.z += 1*cos(PI/180*worldAngle);
+        downKeyPressed = true;
     }
-    
     glutPostRedisplay();
 }
 
+/**
+ * special cases for releasing up/down/left/right arrows
+ **/
+void KeySpecialUp(int key, int x, int y)
+{
+    if (key == GLUT_KEY_RIGHT){
+        rightKeyPressed = false;
+    } else if (key == GLUT_KEY_LEFT){
+        leftKeyPressed = false;
+    }if (key == GLUT_KEY_UP){
+        upKeyPressed = false;
+    } else if (key == GLUT_KEY_DOWN){
+        downKeyPressed = false;
+    }
+}
 
+/**
+ * Get's bounding box of object, probably will change once start using openMesh
+ **/
 void getBoundingBox(){
     maxx = objMesh->maxx;
     minx = objMesh->minx;
@@ -453,10 +509,12 @@ void getBoundingBox(){
     miny = objMesh->miny;
     maxz = objMesh->maxz;
     minz = objMesh->minz;
-    //printf("\nmaxx %f, minx %f, maxy %f, miny %f, maxz %f, minz %f \n", maxx, minx, maxy, miny, maxz, minz);
 }
 
 
+/**
+ * Does initial setup being going into main loop
+ **/
 void setup(string objFile, string splineFile){
     
     //Rusko's mesh
@@ -485,6 +543,9 @@ void setup(string objFile, string splineFile){
     cr = new CatmullRom();
     cr->readFile(splineFile);
     numControlPoints = cr->numControlPoints;
+    
+    //animation stuff
+    upKeyPressed = downKeyPressed = false;
 }
 
 
@@ -515,9 +576,12 @@ int main(int argc, char* argv[])
     glutDisplayFunc(DisplayCallback);
     glutReshapeFunc(ReshapeCallback);
     
-    glutTimerFunc(100, Timer, 0);
+    glutTimerFunc(100, Timer, 0); //timer for moving up/down/turning
+    glutTimerFunc(10, TimerJump, 0); //timer for jumping
+    
     glutKeyboardFunc(KeyboardCallback);
     glutSpecialFunc(KeySpecial);
+    glutSpecialUpFunc(KeySpecialUp);
     
     // enter the GLUT main loop
     glutMainLoop();
