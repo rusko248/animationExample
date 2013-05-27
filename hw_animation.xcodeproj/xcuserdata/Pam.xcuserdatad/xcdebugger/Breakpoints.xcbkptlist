@@ -34,11 +34,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "main.cpp"
-         timestampString = "390784468.8026"
+         timestampString = "391316842.132198"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "490"
-         endingLineNumber = "490">
+         startingLineNumber = "526"
+         endingLineNumber = "526">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -71,25 +71,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "main.cpp"
-         timestampString = "390784468.8026"
+         timestampString = "391316842.132198"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "556"
-         endingLineNumber = "556"
+         startingLineNumber = "595"
+         endingLineNumber = "595"
          landmarkName = "main(int argc, char* argv[])"
-         landmarkType = "7">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "main.cpp"
-         timestampString = "390784468.8026"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "189"
-         endingLineNumber = "189"
-         landmarkName = "drawSmoothObj()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -171,11 +158,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "main.cpp"
-         timestampString = "390784468.8026"
+         timestampString = "391316842.132198"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "393"
-         endingLineNumber = "393"
+         startingLineNumber = "359"
+         endingLineNumber = "359"
          landmarkName = "Timer(int value)"
          landmarkType = "7">
       </FileBreakpoint>
@@ -197,11 +184,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "main.cpp"
-         timestampString = "390784468.8026"
+         timestampString = "391316842.132198"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "437"
-         endingLineNumber = "437"
+         startingLineNumber = "406"
+         endingLineNumber = "406"
          landmarkName = "KeySpecial(int key, int x, int y)"
          landmarkType = "7">
       </FileBreakpoint>

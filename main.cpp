@@ -3,8 +3,6 @@
  * CS248 Final Project
  ****************************************************************************/
 
-//#include "st.h"
-//#include "stglut.h"
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -12,17 +10,22 @@
 #include <GL/glut.h>
 #endif
 
+//mesh includes
+#include <OpenMesh/Core/IO/Options.hh>
+#include <OpenMesh/Core/IO/MeshIO.hh>
+#include "mesh_definitions.h"
+
+
 #include <iostream>
 #include <iomanip>
 #include <sstream>
 #include <string>
 #include <vector>
 #include "math.h"
-
-#include "obj.h"
-#include "mesh.h"
-#include "loadbmp.h"
 #include "CatmullRom.h"
+
+using namespace OpenMesh;
+using namespace std;
 
 
 const float PI = 3.14159265;
@@ -32,9 +35,8 @@ float roomWidth = 60;
 float roomHeight = 10;
 float roomLength = 60;
 
-//imported Rusko dimensions
-float maxx, minx, maxy, miny, maxz, minz;
-mesh* objMesh;
+//rusko mesh
+Mesh rusko;
 
 //CatmullRom stuff
 bool jumpOn;
@@ -53,18 +55,15 @@ int windowHeight = 640;
 STVector3 camPos, worldPos, lastJump;
 float worldAngle;
 
-// Lighting and shading attributes
-bool flat;
-
 //Light properties
 static float light_specular[] = {1.0, 1.0, 1.0, 1.0};
 static float light_ambient[]  = {0.10, 0.10, 0.10, 1.0};
 static float light_diffuse[]  = {0.8, 0.8, 0.8, 1.0};
-static float light_position[] = {10, 45, 20, 0};
+static float light_position[] = {0, 0, 20, 0};
 
 //Material properties
-static float material_ambient0[]  = { .4, .6, 1.0, 1.0 };
-static float material_diffuse0[]  = { .4, .6, 1.0, 1.0 };
+static float material_ambient0[]  = { .4, .6, 1.0, 0.0 };
+static float material_diffuse0[]  = { .4, .6, 1.0, 0.0 };
 static float material_specular0[] = { 1.0000, 1.0000, 1.0000, 1.0 };
 static float shininess = 80.0;  // # between 1 and 128.
 
@@ -80,14 +79,8 @@ void drawGround(float width, float height, float length)
 
     glNormal3f(0, 0, 1.0);
     glVertex3f(0, 0, length);
-        
-    if (!flat)glNormal3f(0, 0, 1.0);
     glVertex3f(0, 0, 0);
-        
-    if (!flat)glNormal3f(0, 0, 1.0);
     glVertex3f(width, 0, 0);
-        
-    if (!flat)glNormal3f(0, 0, 1.0);
     glVertex3f(width, 0, length);
 
 	glEnd();
@@ -100,14 +93,8 @@ void drawRoof(float width, float height, float length)
     
     glNormal3f(0, 0, 1.0);
     glVertex3f(0, height, length);
-    
-    if (!flat)glNormal3f(0, 0, 1.0);
     glVertex3f(0, height, 0);
-    
-    if (!flat)glNormal3f(0, 0, 1.0);
     glVertex3f(width, height, 0);
-    
-    if (!flat)glNormal3f(0, 0, 1.0);
     glVertex3f(width, height, length);
     
 	glEnd();
@@ -121,14 +108,8 @@ void drawWalls(float width, float height, float length)
     
     glNormal3f(0, 0, 1.0);
     glVertex3f(0, 0, length);
-    
-    if (!flat)glNormal3f(0, 0, 1.0);
     glVertex3f(0, height, length);
-    
-    if (!flat)glNormal3f(0, 0, 1.0);
     glVertex3f(0, height, 0);
-    
-    if (!flat)glNormal3f(0, 0, 1.0);
     glVertex3f(0, 0, 0);
     
 	glEnd();
@@ -140,13 +121,8 @@ void drawWalls(float width, float height, float length)
     glNormal3f(0, 0, 1.0);
     glVertex3f(width, 0, length);
     
-    if (!flat)glNormal3f(0, 0, 1.0);
     glVertex3f(width, height, length);
-    
-    if (!flat)glNormal3f(0, 0, 1.0);
     glVertex3f(width, height, 0);
-    
-    if (!flat)glNormal3f(0, 0, 1.0);
     glVertex3f(width, 0, 0);
     
 	glEnd();
@@ -157,14 +133,8 @@ void drawWalls(float width, float height, float length)
     
     glNormal3f(0, 0, 1.0);
     glVertex3f(0, 0, length);
-    
-    if (!flat)glNormal3f(0, 0, 1.0);
     glVertex3f(0, height, length);
-    
-    if (!flat)glNormal3f(0, 0, 1.0);
     glVertex3f(width, height, length);
-    
-    if (!flat)glNormal3f(0, 0, 1.0);
     glVertex3f(width, 0, length);
     
 	glEnd();
@@ -179,81 +149,45 @@ void drawRoom()
 }
 
 /**
- * Draws the object
+ * Draws the rusko
  * applies smooth shading, normal per vertex
  */
-void drawSmoothObj()
+void renderRuskoMesh()
 {
-    vector<STPoint3>* vertices = objMesh->getVertices();
-    vector<STPoint3>* vertices_n = objMesh->getVertices_n();
-    
-    vector<STPoint3>* faces = objMesh->getFaces();
-    vector<STPoint3>* faces_vn = objMesh->getFaces_vn();
     glEnable(GL_NORMALIZE);
-    glBegin(GL_TRIANGLES);
-    glColor3f(0.2, 0.6, 0.2);
-    for (int i=0; i < faces->size(); i++){
-        STPoint3 fac = faces->at(i);
-        STPoint3 fac_vn = faces_vn->at(i);
+
+    for (Mesh::ConstFaceIter it = rusko.faces_begin(); it != rusko.faces_end(); ++it)
+    {
+        Vec3f nA, nB, nC;
+        Vec3f pA, pB, pC;
+        Mesh::ConstFaceVertexIter cfv_it = rusko.cfv_iter(it.handle());
         
-        STPoint3 v1 = vertices->at((int)fac.x);
-        STPoint3 v2 = vertices->at((int)fac.y);
-        STPoint3 v3 = vertices->at((int)fac.z);
+        nA = rusko.normal(cfv_it.handle());
+        pA = rusko.point(cfv_it.handle());
         
-        STPoint3 vn1 = vertices_n->at((int)fac_vn.x);
-        STPoint3 vn2 = vertices_n->at((int)fac_vn.y);
-        STPoint3 vn3 = vertices_n->at((int)fac_vn.z);
+        nB = rusko.normal((++cfv_it).handle());
+        pB = rusko.point(cfv_it.handle());
         
-        glNormal3f(vn1.x, vn1.y, vn1.z);
-        glVertex3f(v1.x,v1.y,v1.z);
+        nC = rusko.normal((++cfv_it).handle());
+        pC = rusko.point(cfv_it.handle());
         
-        glNormal3f(vn2.x, vn2.y, vn2.z);
-        glVertex3f(v2.x,v2.y,v2.z);
+        glBegin(GL_TRIANGLES);
+        glColor3f(0.7,0.7,0.7);
         
-        glNormal3f(vn3.x, vn3.y, vn3.z);
-        glVertex3f(v3.x,v3.y,v3.z);
+        glNormal3f(nA[0],nA[1],nA[2]);
+        glVertex3f(pA[0],pA[1],pA[2]);
+        
+        glNormal3f(nB[0],nB[1],nB[2]);
+        glVertex3f(pB[0],pB[1],pB[2]);
+        
+        glNormal3f(nC[0],nC[1],nC[2]);
+        glVertex3f(pC[0],pC[1],pC[2]);
+        glEnd();
     }
-    glEnd ();
     glFlush();
 }
 
-/**
- * Draws the object
- * applies flat shading
- */
-void drawFlatObj()
-{
-    vector<STPoint3>* vertices = objMesh->getVertices();
-    vector<STPoint3>* vertices_n = objMesh->getVertices_n();
-    
-    vector<STPoint3>* faces = objMesh->getFaces();
-    vector<STPoint3>* faces_vn = objMesh->getFaces_vn();
-    
-    glBegin(GL_TRIANGLES);
-    glColor3f(0.2, 0.6, 0.2);
-    for (int i=0; i < faces->size(); i++){
-        STPoint3 fac = faces->at(i);
-        STPoint3 fac_vn = faces_vn->at(i);
-        
-        STPoint3 v1 = vertices->at((int)fac.x);
-        STPoint3 v2 = vertices->at((int)fac.y);
-        STPoint3 v3 = vertices->at((int)fac.z);
-        
-        STVector3 vn1 = STVector3(vertices_n->at((int)fac_vn.x));
-        STVector3 vn2 = STVector3(vertices_n->at((int)fac_vn.y));
-        STVector3 vn3 = STVector3(vertices_n->at((int)fac_vn.z));
-        
-        STVector3 faceNormal = STVector3((vn1+vn2+vn3)/3);
-        faceNormal.Normalize();
-        
-        glNormal3f(faceNormal.x, faceNormal.y, faceNormal.z);
-        glVertex3f(v1.x,v1.y,v1.z);
-        glVertex3f(v2.x,v2.y,v2.z);
-        glVertex3f(v3.x,v3.y,v3.z);
-    }
-    glEnd ();
-    glFlush();
-}
+
 
 /**
  * Sets up light properties for "rusko"
@@ -263,8 +197,7 @@ void LightSetup()
     //light properties
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
-    if (flat) glShadeModel(GL_FLAT);
-    else glShadeModel(GL_SMOOTH);
+    glShadeModel(GL_SMOOTH);
     
     glLightfv(GL_LIGHT0, GL_SPECULAR,  light_specular);
     glLightfv(GL_LIGHT0, GL_AMBIENT,   light_ambient);
@@ -331,11 +264,10 @@ void drawRusko()
     glPushMatrix ();
     glLoadIdentity();
     
-    glScaled(1/maxx, 1/maxx, 1/maxx); //makes Rusko unit size
-    
+    //glRotated(worldAngle, 0, 1, 0);  //rotates world with given angle
+
     glColor3f(1.0, 1.0, 1.0);
-    if (flat) drawFlatObj();
-    else drawSmoothObj();
+    renderRuskoMesh();
     glPopMatrix ();
 }
 
@@ -447,11 +379,6 @@ void KeyboardCallback(unsigned char key, int x, int y)
         case 27:
             exit(0);
             break;
-        case 'f':
-            if (flat) flat = false;
-            else flat = true;
-            glutPostRedisplay();
-            break;
         case ' ':  //activates jumping
             if (jumpOn) jumpOn = false;
             else {
@@ -499,16 +426,69 @@ void KeySpecialUp(int key, int x, int y)
     }
 }
 
+
+void fitSphere() {
+    // Move center of mass to origin
+    Vec3f center(0,0,0);
+    
+    for (Mesh::ConstVertexIter vIt = rusko.vertices_begin(); vIt != rusko.vertices_end(); ++vIt){
+        center += rusko.point(vIt);
+        center /= rusko.n_vertices();
+    }
+    for (Mesh::VertexIter vIt = rusko.vertices_begin(); vIt != rusko.vertices_end(); ++vIt) {
+        rusko.point(vIt) -= center;
+    }
+    
+    // Fit in the unit sphere
+    float maxLength = 0;
+    for (Mesh::ConstVertexIter vIt = rusko.vertices_begin(); vIt != rusko.vertices_end(); ++vIt) {
+        maxLength = max(maxLength, rusko.point(vIt).length());
+    }
+    for (Mesh::VertexIter vIt = rusko.vertices_begin(); vIt != rusko.vertices_end(); ++vIt) {
+       rusko.point(vIt) /= maxLength;
+    }
+}
+
 /**
- * Get's bounding box of object, probably will change once start using openMesh
+ * Does initial setup for Rusko mesh using Open Mesh
  **/
-void getBoundingBox(){
-    maxx = objMesh->maxx;
-    minx = objMesh->minx;
-    maxy = objMesh->maxy;
-    miny = objMesh->miny;
-    maxz = objMesh->maxz;
-    minz = objMesh->minz;
+void setupRuskoMesh(string objFile){
+    
+    //request normals
+    rusko.request_face_normals();
+    rusko.request_vertex_normals();
+    
+    // assure we have vertex normals
+    if (!rusko.has_vertex_normals())
+    {
+        std::cerr << "ERROR: Standard vertex property 'Normals' not available!\n";
+        exit(1);
+    }
+    
+    //request colors?
+    rusko.request_vertex_colors();
+    
+    IO::Options opt;
+    opt += IO::Options::VertexNormal;
+    opt += IO::Options::FaceNormal;
+    if ( !IO::read_mesh(rusko, objFile, opt )) {
+        cout << "Read failed.\n";
+        exit(1);
+    }
+    
+    // If the file did not provide vertex normals, then calculate them
+    if ( !opt.check( OpenMesh::IO::Options::VertexNormal ) )
+    {
+        printf("in here");
+        // we need face normals to update the vertex normals
+        rusko.request_face_normals();
+        // let the mesh update the normals
+        rusko.update_normals();
+        // dispose the face normals, as we don't need them anymore
+        rusko.release_face_normals();
+    }
+    
+    fitSphere();
 }
 
 
@@ -517,13 +497,8 @@ void getBoundingBox(){
  **/
 void setup(string objFile, string splineFile){
     
-    //Rusko's mesh
-    obj* object = new obj(objFile);
-    objMesh = object->getMesh();
-    getBoundingBox();
-
-    //Light properties
-    flat = false;
+    //rusko's mesh
+    setupRuskoMesh(objFile);
     
     //World position
     worldPos.x = -roomWidth/2;
@@ -533,8 +508,8 @@ void setup(string objFile, string splineFile){
 
     //Rusko position
     camPos.x = 0;
-    camPos.y = 3;
-    camPos.z = -15;
+    camPos.y = 2;
+    camPos.z = -8;
 
     //Jump stuff
     jumpOn = false;

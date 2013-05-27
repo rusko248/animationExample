@@ -7,16 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3F17E8AC171225B50067A28F /* obj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F17E8AA171225B50067A28F /* obj.cpp */; };
-		3F17E8AF171243700067A28F /* mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F17E8AD171243700067A28F /* mesh.cpp */; };
 		3F4E4D4317499BE3001260C7 /* libOpenMeshCored.2.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F4E4D3D17499BCA001260C7 /* libOpenMeshCored.2.3.dylib */; };
 		3F4E4D4417499BE3001260C7 /* libOpenMeshCored.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F4E4D3E17499BCA001260C7 /* libOpenMeshCored.a */; };
 		3F4E4D4517499BE3001260C7 /* libOpenMeshCored.2.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F4E4D3D17499BCA001260C7 /* libOpenMeshCored.2.3.dylib */; };
 		3F4E4D4617499BE3001260C7 /* libOpenMeshToolsd.2.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F4E4D4017499BCA001260C7 /* libOpenMeshToolsd.2.3.dylib */; };
 		3F4E4D4717499BE3001260C7 /* libOpenMeshToolsd.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F4E4D4117499BCA001260C7 /* libOpenMeshToolsd.a */; };
 		3F4E4D4817499BE3001260C7 /* libOpenMeshToolsd.2.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F4E4D4017499BCA001260C7 /* libOpenMeshToolsd.2.3.dylib */; };
-		3F4F4F13172A540200C8D9F6 /* Quaternion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F4F4F11172A540200C8D9F6 /* Quaternion.cpp */; };
-		3FA0D52E17193CC20090C551 /* loadbmp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3FA0D52C17193CC10090C551 /* loadbmp.cpp */; };
 		3FF02A9F172B59F6007EA207 /* CatmullRom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3FF02A9D172B59F6007EA207 /* CatmullRom.cpp */; };
 		C36025F8162E100B00AC8850 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C36025F7162E100B00AC8850 /* OpenGL.framework */; };
 		C36025FA162E100F00AC8850 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C36025F9162E100F00AC8850 /* GLUT.framework */; };
@@ -47,10 +43,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		3F17E8AA171225B50067A28F /* obj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = obj.cpp; sourceTree = "<group>"; };
-		3F17E8AB171225B50067A28F /* obj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = obj.h; sourceTree = "<group>"; };
-		3F17E8AD171243700067A28F /* mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mesh.cpp; sourceTree = "<group>"; };
-		3F17E8AE171243700067A28F /* mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mesh.h; sourceTree = "<group>"; };
+		3F17BECC175194AA00AA06A0 /* mesh_definitions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mesh_definitions.h; sourceTree = "<group>"; };
 		3F194B631745E1BC00CC651D /* .qmake.cache */ = {isa = PBXFileReference; lastKnownFileType = text; path = .qmake.cache; sourceTree = "<group>"; };
 		3F194B641745E1BC00CC651D /* ACGMakefile */ = {isa = PBXFileReference; lastKnownFileType = text; path = ACGMakefile; sourceTree = "<group>"; };
 		3F194B651745E1BC00CC651D /* CHANGELOG */ = {isa = PBXFileReference; lastKnownFileType = text; path = CHANGELOG; sourceTree = "<group>"; };
@@ -4085,10 +4078,6 @@
 		3F4E4D4017499BCA001260C7 /* libOpenMeshToolsd.2.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libOpenMeshToolsd.2.3.dylib; sourceTree = "<group>"; };
 		3F4E4D4117499BCA001260C7 /* libOpenMeshToolsd.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOpenMeshToolsd.a; sourceTree = "<group>"; };
 		3F4E4D4217499BCA001260C7 /* libOpenMeshToolsd.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libOpenMeshToolsd.dylib; sourceTree = "<group>"; };
-		3F4F4F11172A540200C8D9F6 /* Quaternion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Quaternion.cpp; sourceTree = "<group>"; };
-		3F4F4F12172A540200C8D9F6 /* Quaternion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Quaternion.h; sourceTree = "<group>"; };
-		3FA0D52C17193CC10090C551 /* loadbmp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = loadbmp.cpp; sourceTree = "<group>"; };
-		3FA0D52D17193CC10090C551 /* loadbmp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = loadbmp.h; sourceTree = "<group>"; };
 		3FF02A9D172B59F6007EA207 /* CatmullRom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CatmullRom.cpp; sourceTree = "<group>"; };
 		3FF02A9E172B59F6007EA207 /* CatmullRom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CatmullRom.h; sourceTree = "<group>"; };
 		8DD76FB20486AB0100D96B5E /* morph */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = morph; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -4139,14 +4128,7 @@
 				E048354D1261DF010021CA9C /* main.cpp */,
 				3FF02A9D172B59F6007EA207 /* CatmullRom.cpp */,
 				3FF02A9E172B59F6007EA207 /* CatmullRom.h */,
-				3F4F4F11172A540200C8D9F6 /* Quaternion.cpp */,
-				3F4F4F12172A540200C8D9F6 /* Quaternion.h */,
-				3FA0D52C17193CC10090C551 /* loadbmp.cpp */,
-				3FA0D52D17193CC10090C551 /* loadbmp.h */,
-				3F17E8AA171225B50067A28F /* obj.cpp */,
-				3F17E8AB171225B50067A28F /* obj.h */,
-				3F17E8AD171243700067A28F /* mesh.cpp */,
-				3F17E8AE171243700067A28F /* mesh.h */,
+				3F17BECC175194AA00AA06A0 /* mesh_definitions.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -9030,10 +9012,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E048354E1261DF010021CA9C /* main.cpp in Sources */,
-				3F17E8AC171225B50067A28F /* obj.cpp in Sources */,
-				3F17E8AF171243700067A28F /* mesh.cpp in Sources */,
-				3FA0D52E17193CC20090C551 /* loadbmp.cpp in Sources */,
-				3F4F4F13172A540200C8D9F6 /* Quaternion.cpp in Sources */,
 				3FF02A9F172B59F6007EA207 /* CatmullRom.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

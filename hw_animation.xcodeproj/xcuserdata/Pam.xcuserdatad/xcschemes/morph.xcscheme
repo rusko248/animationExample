@@ -60,11 +60,19 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "shirt/12-orig_shirt_unposed_no_tie.obj controlPointsRuskoJump.txt"
+            argument = "shirt/12-orig_shirt_unposed_no_tie.obj rusko/jump_controlPoints.txt"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "rusko/Rusko_v5_try2.obj rusko/jump_controlPoints.txt"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "obj/sphere.obj controlPointsRuskoJump.txt"
+            argument = "rusko/Rusko_v5_rig_ready.obj rusko/jump_controlPoints.txt"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "obj/sphere.obj rusko/jump_controlPoints.txt"
             isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
